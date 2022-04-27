@@ -34,7 +34,7 @@ There are a few files where you can configure a few different settings:
 
             joinRoom(browser, roomLink, "Haxball Nickname")
 
-        Additionally, by default the project is not headless, meaning you will be able to see the browser window. If you 	want to hide the browser, you can set "IS_HEADLESS" to **true**
+Additionally, by default the project is not headless, meaning you will be able to see the browser window. If you want to hide the browser, you can set "IS_HEADLESS" to **true**
 
             const  IS_HEADLESS  =  false;
 
