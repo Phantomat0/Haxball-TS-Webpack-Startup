@@ -30,7 +30,7 @@ As a result, webpack will create **2** bundles, one room-bundle.js and one serve
 There are a few files where you can configure a few different settings:
 
 1.  src/server/index.ts
-    Here you can configure the room name that will be used for testing, found in the joinRoom() function. "Haxball Nickname" can be changed to any name you would like.
+    Here you can configure the nickname of the auto join player that will be used for testing, found in the joinRoom() function. "Haxball Nickname" can be changed to any name you would like.
 
 ```js
 joinRoom(browser, roomLink, "Haxball Nickname");
@@ -60,7 +60,3 @@ const IS_HEADLESS = false;
    npm run start
 
 4. Watch is enabled in the webpack.config file meaning any changes you make will be automatically saved. Just do "npm run start" to rerun the room with any new changes you make!
-
-```
-
-```
