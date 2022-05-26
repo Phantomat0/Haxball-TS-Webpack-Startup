@@ -32,11 +32,11 @@ There are a few files where you can configure a few different settings:
 1.  src/server/index.ts
     Here you can configure the room name that will be used for testing, found in the joinRoom() function. "Haxball Nickname" can be changed to any name you would like.
 
-          joinRoom(browser, roomLink, "Haxball Nickname")
+    joinRoom(browser, roomLink, "Haxball Nickname")
 
 Additionally, by default the project is not headless, meaning you will be able to see the browser window. If you want to hide the browser, you can set "IS_HEADLESS" to **true**
 
-          const  IS_HEADLESS  =  false;
+    const  IS_HEADLESS  =  false;
 
 2.  src/room/roomConfig.ts
     Here you can configure the settings for the room, room name, max players etc. I moved this to a new file so any changes you make to the room name or token don't get picked up by git. Make sure you load your token here, so that you can bypass the reCAPCTHA. You can choose to solve the captcha yourself, but if you take too long puppeteer will close the browser automatically.
