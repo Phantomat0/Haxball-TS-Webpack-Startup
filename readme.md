@@ -56,5 +56,3 @@ Additionally, by default the project is not headless, meaning you will be able t
    npm run start
 
 4. Watch is enabled in the webpack.config file meaning any changes you make will be automatically saved. Just do "npm run start" to rerun the room with any new changes you make!
-
-   npm run start
