@@ -2,6 +2,20 @@ export type HBRecording = string;
 
 type TeamId = 0 | 1 | 2;
 
+type DefaultStadiums =
+  | "Classic"
+  | "Easy"
+  | "Small"
+  | "Big"
+  | "Rounded"
+  | "Hockey"
+  | "BigHockey"
+  | "BigEasy"
+  | "BigRounded"
+  | "Huge";
+
+type PlayableTeamId = 1 | 2;
+
 export interface ScoresObject {
   red: number;
   blue: number;
@@ -15,20 +29,156 @@ interface Position {
   y: number;
 }
 
-interface DiscPropertiesObject {
+interface Speed {
   x: number;
   y: number;
+}
+
+interface DiscPropertiesObject {
+  /**
+   * x axis position.
+   */
+  x: number;
+  /**
+   * y axis position.
+   */
+  y: number;
+  /**
+   * x axis speed, can be negative.
+   */
   xspeed: number;
+  /**
+   * y axis speed, can be negative.
+   */
   yspeed: number;
+  /**
+   * x gravity.
+   */
   xgravity: number;
+  /**
+   * y gravity.
+   */
   ygravity: number;
+  /**
+   * Radius of the disc.
+   */
   radius: number;
+  /**
+   * Number from 0 to 1 that defines how bouncy the ball is.
+   */
   bCoeff: number;
+  /**
+   * Number from 0 to 1 that defines the inverse of the mass, the closer to 0 the heavier this object is.
+   */
   invMass: number;
+  /**
+   * Number from 0 to 1 that defines the inverse of the mass, the closer to 0 the heavier this object is.
+   */
   damping: number;
   color: number;
   cMask: number;
   cGroup: number;
+}
+
+/* DEFAULT PHYSICS */
+
+// "playerPhysics" : {
+// 	"bCoef" : 0.5,
+// 	"invMass" : 0.5,
+// 	"damping" : 0.96,
+// 	"acceleration" : 0.1,
+// 	"kickingAcceleration" : 0.07,
+// 	"kickingDamping" : 0.96,
+// 	"kickStrength" : 5
+
+// },
+
+// "ballPhysics" : {
+// 	"radius" : 10,
+// 	"bCoef" : 0.5,
+// 	"invMass" : 1,
+// 	"damping" : 0.99,
+// 	"color" : "FFFFFF",
+// 	"cMask" : [ "all"
+// 	],
+// 	"cGroup" : [ "ball"
+// 	]
+
+// }
+
+/**
+ * Collision flags for map collisions
+ */
+export interface CollisionFlags {
+  /**
+   * The default collision group of the ball.
+   */
+  ball: 1;
+
+  /**
+   * The red team collision flag. This layer is automatically added to players of the red team.
+   */
+  red: 2;
+
+  /**
+   * The blue team collision flag. This layer is automatically added to players of the blue team.
+   */
+  blue: 4;
+
+  /**
+   * The red KO collision flag. This layer represents kickoff barriers that become active during kickOff for the red team.
+   */
+  redKO: 8;
+
+  /**
+   * The blue KO collision flag. This layer represents kickoff barriers that become active during kickOff for the blue team.
+   */
+  blueKO: 16;
+
+  /**
+   * The default collision group for vertexes segments and planes.
+   */
+  wall: 32;
+
+  /**
+   * Represents a set including ball, red, blue, redKO, blueKO and wall collision flags.
+   */
+  all: 63;
+
+  /**
+   * The kick collision flag. Objects with this flag in their cGroup will become kickable by the players.
+   */
+  kick: 64;
+
+  /**
+   * The score collision flag.Objects with this flag in their cGroup will score goals if they cross a goal line.
+   */
+  score: 128;
+
+  c0: 268435456;
+  c1: 536870912;
+  c2: 1073741824;
+  c3: -2147483648;
+}
+
+/**
+ * The Geo interface.
+ */
+export interface GeoLocation {
+  /**
+   * The country code.
+   */
+  code: string;
+
+  /**
+   * The latitude.
+   */
+  lat: number;
+
+  /**
+   * The longitude.
+   */
+  lon: number;
 }
 
 /**
@@ -58,7 +208,7 @@ export interface HBClientConfig {
   /**
    * GeoLocation override for the room.
    */
-  geo?: object;
+  geo?: GeoLocation;
   /**
    * Can be used to skip the recaptcha.
    */
@@ -67,9 +217,6 @@ export interface HBClientConfig {
    * If set to true the room player list will be empty, the playerName setting will be ignored.
    */
   noPlayer?: boolean;
-  /**
-   * Object filled with the collision flags constants that compose the cMask and cGroup disc properties.
-   */
 }
 
 /**
@@ -113,8 +260,13 @@ interface FullPlayerObject extends PlayerObject {
   conn: string;
 }
 
+export type PlayerObjFlat = Pick<PlayerObject, "name" | "id" | "team">;
+
 export default interface HBClient {
-  readonly CollisionFlags: object;
+  /**
+   * Object filled with the collision flags constants that compose the cMask and cGroup disc properties.
+   */
+  readonly CollisionFlags: CollisionFlags;
   /**
    * Changes the admin status of the specified player.
    */
@@ -240,7 +392,7 @@ export default interface HBClient {
   /**
    * Gets the properties of the disc at discIndex. Returns null if discIndex is out of bounds.
    */
-  getDiscProperties(): DiscPropertiesObject;
+  getDiscProperties(discId: number): DiscPropertiesObject;
   /**
    * Same as setDiscProperties but targets the disc belonging to a player with the given Id.
    */
@@ -251,7 +403,7 @@ export default interface HBClient {
   /**
    * Same as getDiscProperties but targets the disc belonging to a player with the given Id.
    */
-  getPlayerDiscProperties(): DiscPropertiesObject;
+  getPlayerDiscProperties(playerId: PlayerObject["id"]): DiscPropertiesObject;
   /**
    * Gets the number of discs in the game including the ball and player discs.
    */
