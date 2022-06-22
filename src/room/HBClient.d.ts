@@ -246,6 +246,11 @@ export interface PlayerObject {
 }
 
 /**
+ * Flattened player
+ */
+export type PlayerObjFlat = Pick<PlayerObject, "name" | "id" | "team">;
+
+/**
  * PlayerObject with connection or auth
  */
 
@@ -260,8 +265,6 @@ interface FullPlayerObject extends PlayerObject {
   conn: string;
 }
 
-export type PlayerObjFlat = Pick<PlayerObject, "name" | "id" | "team">;
-
 export default interface HBClient {
   /**
    * Object filled with the collision flags constants that compose the cMask and cGroup disc properties.
@@ -274,7 +277,11 @@ export default interface HBClient {
   /**
    * Kicks the specified player from the room.
    */
-  kickPlayer(playerId: PlayerObject["id"], reason: string, ban: boolean): void;
+  kickPlayer(
+    playerId: PlayerObject["id"],
+    reason: string | null,
+    ban: boolean
+  ): void;
   /**
    * Clears the ban for a playerId that belonged to a player that was previously banned.
    */
@@ -298,7 +305,7 @@ export default interface HBClient {
   /**
    * Sets the selected stadium to one of the default stadiums. The name must match exactly (case sensitive).
    */
-  setDefaultStadium(stadiumName: JSON): void;
+  setDefaultStadium(stadiumName: string): void;
   /**
    * Sets the teams lock. When teams are locked players are not able to change team unless they are moved by an admin.
    */
@@ -403,7 +410,9 @@ export default interface HBClient {
   /**
    * Same as getDiscProperties but targets the disc belonging to a player with the given Id.
    */
-  getPlayerDiscProperties(playerId: PlayerObject["id"]): DiscPropertiesObject;
+  getPlayerDiscProperties(
+    playerId: PlayerObject["id"]
+  ): DiscPropertiesObject | null;
   /**
    * Gets the number of discs in the game including the ball and player discs.
    */
@@ -484,7 +493,9 @@ export default interface HBClient {
    * Event called when a player team is changed.
    * @param byPlayer is the player which caused the event (can be null if the event wasn't caused by a player).
    */
-  set onPlayerTeamChange(func: (player: PlayerObject) => void);
+  set onPlayerTeamChange(
+    func: (player: PlayerObject, byPlayer: PlayerObject) => void
+  );
 
   /**
    * Event called when a player has been kicked from the room. This is always called after the onPlayerLeave event.

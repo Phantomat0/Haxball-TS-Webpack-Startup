@@ -1,3 +1,4 @@
-import { PlayerObject } from "../HBClient";
+import HBClient from "../HBClient";
 
-export default function onChat(player: PlayerObject, message: string) {}
+const onChat: HBClient["onPlayerChat"] = (player, message) => {};
+export default onChat;

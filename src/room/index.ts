@@ -1,14 +1,17 @@
 import onChat from "./events/onChat";
-import HBClient from "./HBClient";
+import HBClient, { HBClientConfig } from "./HBClient";
 import roomConfig from "./roomConfig";
-import Room from "./structures/Room";
 
-//@ts-ignore
-const room: HBClient = HBInit(roomConfig);
-Room.initClient(room);
+declare function HBInit(clientConfig: HBClientConfig): HBClient;
 
-room.onPlayerJoin = (player) => {
-  room.setPlayerAdmin(player.id, true);
+const client = HBInit(roomConfig);
+
+client.setTeamsLock(true);
+
+export default client;
+
+client.onPlayerJoin = (player) => {
+  client.setPlayerAdmin(player.id, true);
 };
 
-room.onPlayerChat = onChat;
+client.onPlayerChat = onChat;
